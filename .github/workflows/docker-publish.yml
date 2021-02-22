@@ -1,0 +1,33 @@
+name: docker-publish
+
+on:
+  push:
+    branches:
+      - "release/*"
+    tags:
+      - "v*.*.*"
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    environment: docker-github-packages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          file: Dockerfile.nitro
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: ${{ github.repository }}/tmkms-nitro-enclave
+          build-args: |
+            RUST_TOOLCHAIN=1.50.0
+          tags: |
+            ${{ github.repository }}/tmkms-nitro-enclave:latest
+            ${{ github.repository }}/tmkms-nitro-enclave:${{ steps.get_version.outputs.VERSION }}
