@@ -32,4 +32,4 @@ jobs:
             RUST_TOOLCHAIN=1.46.0
           tags: |
             allthatjazzleo/testing:latest
-            allthatjazzleo/testing:${{ github.event.release.tag_name }}
+            allthatjazzleo/testing:${{ github.event.push.tag_name }}
