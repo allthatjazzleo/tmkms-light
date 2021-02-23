@@ -16,6 +16,12 @@ jobs:
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
@@ -23,8 +29,6 @@ jobs:
           push: true
           file: Dockerfile.nitro
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.CR_PAT }}
           build-args: |
             RUST_TOOLCHAIN=1.50.0
           tags: |
