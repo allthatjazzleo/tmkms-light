@@ -22,12 +22,11 @@ jobs:
           context: .
           push: true
           file: Dockerfile.nitro
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
-          repository: ${{ github.repository }}/tmkms-nitro-enclave
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
           build-args: |
             RUST_TOOLCHAIN=1.50.0
           tags: |
-            ${{ github.repository }}/tmkms-nitro-enclave:latest
-            ${{ github.repository }}/tmkms-nitro-enclave:${{ steps.get_version.outputs.VERSION }}
+            ${{ github.repository_owner }}/tmkms-nitro-enclave:latest
+            ${{ github.repository_owner }}/tmkms-nitro-enclave:${{ steps.get_version.outputs.VERSION }}
