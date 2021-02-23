@@ -33,5 +33,5 @@ jobs:
           build-args: |
             RUST_TOOLCHAIN=1.50.0
           tags: |
-            ${{ github.repository_owner }}/tmkms-nitro-enclave:latest
-            ${{ github.repository_owner }}/tmkms-nitro-enclave:${{ steps.get_version.outputs.VERSION }}
+            ghcr.io/${{ github.repository_owner }}/tmkms-nitro-enclave:latest
+            ghcr.io/${{ github.repository_owner }}/tmkms-nitro-enclave:${{ steps.get_version.outputs.VERSION }}
