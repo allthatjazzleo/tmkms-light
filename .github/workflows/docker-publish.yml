@@ -27,7 +27,8 @@ jobs:
         with:
           context: .
           push: true
-          file: Dockerfile.nitro
+          file: Dockerfile
+          # file: Dockerfile.nitro
           registry: ghcr.io
           build-args: |
             RUST_TOOLCHAIN=1.50.0
