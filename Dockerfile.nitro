@@ -1,6 +1,15 @@
 # This dockerfile is taken from https://github.com/aws/aws-nitro-enclaves-acm/blob/main/env/enclave/Dockerfile
-
 # Modified to help build tmkms-nitro-enclave eif
+
+# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+# This Docker file sets up the development environment for the eVault components
+# that live inside the enclave.
+# Note: this is not the container image used to generate the final enclave image,
+#       but a somewhat dependency-heavy dev-time environment. The enclave image
+#       source container will start from scratch, cherry-picking only its
+#       required run-time dependencies from here.
 
 FROM alpine:3.12 as build_env
 
@@ -217,6 +226,21 @@ RUN mkdir -p /rootfs/bin/
 RUN find /rootfs
 
 FROM alpine:3.13
+
+ARG USER=default
+ENV HOME /home/$USER
+
+# install sudo as root
+RUN apk add --update sudo
+
+# add new user
+RUN adduser -D $USER \
+    && echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER \
+    && chmod 0440 /etc/sudoers.d/$USER
+
+USER $USER
+WORKDIR $HOME
+
 COPY --from=builder /rootfs /
-WORKDIR /home
+
 CMD ["/usr/bin/tmkms-nitro-enclave"]
